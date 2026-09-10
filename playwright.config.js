@@ -23,7 +23,7 @@ const config = ({
   ['allure-playwright']],
   use: {
     browserName: 'chromium',
-    headless: false,
+    headless: true,
   }
 });
 module.exports = config;
