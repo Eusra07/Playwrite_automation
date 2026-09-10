@@ -1,0 +1,26 @@
+[
+    {
+        "USERNAME":"Admin",
+        "PASSWORD":"wrong"
+    },
+    {
+        "USERNAME":"wrong",
+        "PASSWORD":"admin123"
+    },
+    {
+        "USERNAME":"wrong",
+        "PASSWORD":"wrong"
+    },
+    {
+        "USERNAME":"",
+        "PASSWORD":""
+    },
+    {
+        "USERNAME":"",
+        "PASSWORD":"123admin"
+    },
+    {
+        "USERNAME":"Admin",
+        "PASSWORD":""
+    }
+]

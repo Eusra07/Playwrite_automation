@@ -1,0 +1,117 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: invalidLogin.spec.js >> Check invalid login combination 2
+- Location: tests\invalidLogin.spec.js:8:3
+
+# Error details
+
+```
+ReferenceError: promiseHooks is not defined
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=f1e4]:
+  - generic [ref=f1e6]:
+    - img "company-branding" [ref=f1e8]
+    - generic [ref=f1e9]:
+      - heading "Login" [level=5] [ref=f1e10]
+      - generic [ref=f1e11]:
+        - generic [ref=f1e13]:
+          - paragraph [ref=f1e14]: "Username : Admin"
+          - paragraph [ref=f1e15]: "Password : admin123"
+        - generic [ref=f1e16]:
+          - generic [ref=f1e18]:
+            - generic [ref=f1e19]:
+              - generic [ref=f1e20]: 
+              - generic [ref=f1e21]: Username
+            - textbox "Username" [ref=f1e23]: wrong
+          - generic [ref=f1e25]:
+            - generic [ref=f1e26]:
+              - generic [ref=f1e27]: 
+              - generic [ref=f1e28]: Password
+            - textbox "Password" [active] [ref=f1e30]: admin123
+          - button "Login" [ref=f1e32] [cursor=pointer]
+          - paragraph [ref=f1e34] [cursor=pointer]: Forgot your password?
+      - generic [ref=f1e35]:
+        - generic [ref=f1e36]:
+          - link [ref=f1e37] [cursor=pointer]:
+            - /url: https://www.linkedin.com/company/orangehrm/mycompany/
+          - link [ref=f1e40] [cursor=pointer]:
+            - /url: https://www.facebook.com/OrangeHRM/
+          - link [ref=f1e43] [cursor=pointer]:
+            - /url: https://twitter.com/orangehrm?lang=en
+          - link [ref=f1e46] [cursor=pointer]:
+            - /url: https://www.youtube.com/c/OrangeHRMInc
+        - generic [ref=f1e49]:
+          - paragraph [ref=f1e50]: OrangeHRM OS 5.9
+          - paragraph [ref=f1e51]:
+            - text: © 2005 - 2026
+            - link "OrangeHRM, Inc" [ref=f1e52] [cursor=pointer]:
+              - /url: http://www.orangehrm.com
+            - text: . All rights reserved.
+  - img "orangehrm-logo" [ref=f1e54]
+```
+
+# Test source
+
+```ts
+  1  | const { expect } = require("@playwright/test");
+  2  | 
+  3  | 
+  4  | class LoginPage{
+  5  | 
+  6  |     constructor(page){
+  7  |         this.page = page;
+  8  |         this.userName = page.getByPlaceholder('Username');
+  9  |         this.password = page.getByPlaceholder('Password');
+  10 |         this.loginButton = page.getByRole('button', { name: 'Login' });
+  11 |         this.credentials = page.getByText('Invalid credentials', {exact: true});
+  12 |         this.errorInput = page.locator('.oxd-input-field-error-message')
+  13 |     }
+  14 | 
+  15 |     async goToLoginPage(){
+  16 | 
+  17 |         await this.page.goto(process.env.BASE_URL);
+  18 | 
+  19 |     }
+  20 | 
+  21 |     async login(username, password){
+  22 |         await this.userName.fill(username);
+  23 |         await this.password.fill(password);
+  24 | 
+> 25 |         await promiseHooks.all([
+     |         ^ ReferenceError: promiseHooks is not defined
+  26 |             this.page.waitForLoadState('load'),
+  27 |             this.loginButton.click()
+  28 |         ]);
+  29 |         
+  30 |     }
+  31 | 
+  32 |     async invalidLogin(username,password){
+  33 | 
+  34 |         if (username === '' && password === ''){
+  35 | 
+  36 |         await expect(this.errorInput.nth(0)).toHaveText('Required');
+  37 |         await expect(this.errorInput.nth(1)).toHaveText('Required');
+  38 | 
+  39 |         } else if (username === '' || password === ''){
+  40 | 
+  41 |         await expect(this.errorInput.first()).toHaveText('Required');
+  42 |         
+  43 |         } else{
+  44 |         await expect(this.credentials).toBeVisible();
+  45 | 
+  46 |         }
+  47 |     }
+  48 | }
+  49 | 
+  50 | module.exports = {LoginPage}
+```
