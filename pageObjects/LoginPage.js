@@ -14,7 +14,16 @@ class LoginPage{
 
     async goToLoginPage(){
 
-        await this.page.goto(process.env.BASE_URL);
+        //await this.page.waitForTimeout(2000);
+
+        await this.page.goto(process.env.BASE_URL, {
+            waitUntil: 'domcontentloaded',
+            timeout: 50000
+        });
+            await this.userName.waitFor({
+        state: 'visible',
+        timeout: 30000
+        });
 
     }
 
