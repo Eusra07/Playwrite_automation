@@ -49,6 +49,10 @@ class LoginPage{
 
         }
     }
+
+    async validLogin(){
+        await expect(this.page.getByRole('heading',{name: 'Dashboard'})).toBeVisible();
+    }
 }
 
 module.exports = {LoginPage}
