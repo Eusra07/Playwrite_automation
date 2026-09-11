@@ -14,10 +14,15 @@ const employeeData = require("../utils/employeeCredData.json");
 
     const employeePage = poManager.getEmployeePage();
     await employeePage.goToEmployeePage();
-    await employeePage.addEmployee(employeeData.FIRST_NAME,employeeData.LAST_NAME,employeeData.EMPLOYEE_ID);
+
+    const employeeId = Math.floor(Math.random()*(999999-100)+100).toString();
+    await employeePage.addEmployee(employeeData.FIRST_NAME,employeeData.LAST_NAME,employeeId);
     await employeePage.empLists();
-    await employeePage.searchEmployee(`${employeeData.FIRST_NAME} ${employeeData.LAST_NAME}`,employeeData.EMPLOYEE_ID);
-    await page.pause();
+    await employeePage.searchEmployee(`${employeeData.FIRST_NAME} ${employeeData.LAST_NAME}`,employeeId);
+    await employeePage.verifyEmployee(employeeData.FIRST_NAME,employeeData.LAST_NAME,employeeId);
+
+    const logoutPage = poManager.getLogoutPage();
+    await logoutPage.logout();
 
 
     

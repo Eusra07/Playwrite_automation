@@ -15,6 +15,7 @@ require ('dotenv').config();
 const config = ({
   testDir: './tests',
   timeout: 40*1000, 
+  worker: 1,
   expect: {
     timeout: 5000
   },
