@@ -1,6 +1,4 @@
 const { expect } = require("@playwright/test");
-const { TIMEOUT } = require("dns");
-
 
 class EmployeePage{
 
