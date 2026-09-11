@@ -4,7 +4,7 @@ const dataset = require("../utils/validLoginData.json") ;
 const employeeData = require("../utils/employeeCredData.json");
 
 
-  test(`Verify new employee added successfully ${dataset.USERNAME}`, async ({ page }) => {
+test(`Verify new employee added successfully ${dataset.USERNAME}`, async ({ page }) => {
 
     const poManager = new POManager(page);
     const loginPage = poManager.getLoginPage();
@@ -27,4 +27,4 @@ const employeeData = require("../utils/employeeCredData.json");
 
     
     
-  });
+});
