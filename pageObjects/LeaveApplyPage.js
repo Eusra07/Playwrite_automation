@@ -11,10 +11,10 @@ class LeaveApplyPage{
         this.applyLeaveTitle = this.page.getByRole('heading', { name: 'Apply Leave' });
 
 
-        this.selectDrop = this.page.getByText('-- Select --', { exact: true });
+        this.selectDrop = this.page.locator("//div[@class='oxd-select-text-input']")
         this.fromDate = this.page.locator('div.oxd-input-group').filter({ hasText: 'From Date' }).locator('input');
         this.toDate = this.page.locator('div.oxd-input-group').filter({ hasText: 'To Date' }).locator('input');
-        this.leaveTime = this.page.getByText('Day(s)');
+        this.leaveTime = this.page.locator(".oxd-select-text-input");
 
         this.commentBox = this.page.locator('textarea:visible');
 
@@ -40,10 +40,11 @@ class LeaveApplyPage{
     async applyForLeave(firstDate,secondDate){
         await this.selectDrop.click();
 
-        if (await this.leaveTime.filter({hasText: '0.00 Day(s)'})){
+        await this.page.getByRole('option').nth(1).click();
+        await this.page.waitForTimeout(3000);
+        if (await this.leaveTime.filter({hasText: '0.00 Day(s)', exact: true}).count()>0){
+            await this.selectDrop.click();
             await this.page.getByRole('option').nth(2).click();
-        } else{
-            await this.page.getByRole('option').nth(1).click();
         }
 
         //add a for loop here so that it retries until the re is successful
@@ -83,19 +84,12 @@ class LeaveApplyPage{
 
         if (await pending.count()>0){
             await this.rowComment.locator('button').filter({hasText: 'Cancel'}).click();
-        }
 
-        const rowText = await this.rowComment.textContent();
-
-        console.log("ROW:", rowText);
-        console.log("FROM DATE:", firstdate);
-        console.log("FROM DATE FOUND:", rowText.includes(firstdate));
-
-        console.log("TO DATE:", secondate);
-        console.log("TO DATE FOUND:", rowText.includes(secondate));
+            const cancelled = this.rowComment.getByText('Cancelled');
+            await expect(cancelled).toBeVisible();
+            await this.page.pause();
+        }        
     }
-
-
 }
 
 module.exports = {LeaveApplyPage};
