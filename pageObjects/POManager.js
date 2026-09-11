@@ -1,5 +1,6 @@
 const { LoginPage } = require("./LoginPage");
 const { EmployeePage } = require("./EmployeePage");
+const { LogoutPage } = require("./logoutPage");
 
 
 class POManager{
@@ -8,6 +9,7 @@ class POManager{
         this.page = page;
         this.loginPage = new LoginPage(this.page);
         this.employeePage = new EmployeePage(this.page);
+        this.logoutPage = new LogoutPage(this.page);
     }
 
     getLoginPage(){
@@ -17,6 +19,11 @@ class POManager{
     getEmployeePage(){
         return this.employeePage; 
     }
+
+    getLogoutPage(){
+        return this.logoutPage;
+    }
+
 }
 
 module.exports = {POManager};

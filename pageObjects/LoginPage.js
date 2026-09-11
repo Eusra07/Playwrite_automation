@@ -45,7 +45,8 @@ class LoginPage{
         await expect(this.errorInput.first()).toHaveText('Required');
         
         } else{
-        await expect(this.credentials).toBeVisible({timeout: 6000});
+        await this.page.waitForLoadState('load');
+        await expect(this.credentials).toBeVisible({timeout: 8000});
 
         }
     }

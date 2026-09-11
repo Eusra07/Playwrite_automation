@@ -1,4 +1,5 @@
 const { expect } = require("@playwright/test");
+const { TIMEOUT } = require("dns");
 
 
 class EmployeePage{
@@ -18,6 +19,8 @@ class EmployeePage{
         this.employeeList = this.page.locator('a').filter({ hasText: 'Employee List' });
         this.empname = this.page.locator('.oxd-input-group').filter({hasText: 'Employee Name'}).getByRole('textbox');
         this.empid = this.page.locator('.oxd-input-group').filter({ hasText: 'Employee Id' }).getByRole('textbox');
+        this.searchButton = this.page.getByRole('button', { name: 'Search' });
+
         
     }
 
@@ -29,10 +32,14 @@ class EmployeePage{
     async addEmployee(firstname, lastname, employeeid){
         await this.addButton.click();
         await expect(this.employeeCard).toBeVisible();
+        await expect(this.saveButton).toBeVisible({timeout: 10000});
         await this.firstName.fill(firstname);
         await this.lastName.fill(lastname);
         await this.employeeId.fill(employeeid);
         await this.saveButton.click();
+        await expect(this.page.getByText('Successfully Saved', { exact: true })).toBeVisible();
+
+        //await expect(this.page.locator('.oxd-toast-content-text').toHaveText('Successfully Saved'));
         //await this.page.pause();
 
     }
@@ -45,7 +52,17 @@ class EmployeePage{
     async searchEmployee(empName, empId){
         await this.empname.fill(empName);
         await this.empid.fill(empId);
+        await this.searchButton.click();
     }
+
+    async verifyEmployee(first, last, id){
+        await expect(this.page.getByText('(1) Record Found', { exact: true })).toBeVisible();
+        await expect(this.page.getByText(`${id}`, { exact: true })).toBeVisible(); 
+        await expect(this.page.getByText(`${first}`, { exact: true })).toBeVisible();
+        await expect(this.page.getByText(`${last}`, { exact: true })).toBeVisible();  
+        console.log("Employee search complete");
+    }
+
 }
 
 module.exports = {EmployeePage};
