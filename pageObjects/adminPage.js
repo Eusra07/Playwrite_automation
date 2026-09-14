@@ -1,4 +1,5 @@
 const { expect } = require("@playwright/test");
+const { POManager } = require("./POManager");
 
 class AdminPage{
 
@@ -21,7 +22,7 @@ class AdminPage{
 
         this.rowAll = this.page.getByRole('row');
         this.editIcon = this.page.locator('i.oxd-icon.bi-pencil-fill');
-
+        this.editTitle = this.page.getByRole('heading', { name: 'Edit User' });
         this.cardAll = this.page.locator('div.oxd-input-group.oxd-input-field-bottom-space:visible');
         this.editDropdown = this.page.locator('.oxd-select-text-input'); //both dropdown
 
@@ -30,7 +31,9 @@ class AdminPage{
 
     async goToAdminPage(){
         await this.adminButton.click();
-        await expect(this.adminHeader).toBeVisible({timeout: 5000});
+        await this.page.waitForURL('https://opensource-demo.orangehrmlive.com/web/index.php/admin/viewSystemUsers');
+        //await this.page.waitForLoadState('domcontentloaded');
+        await expect(this.adminHeader).toBeVisible({timeout: 10000});
         //await this.page.pause();
     }
 
@@ -56,7 +59,7 @@ class AdminPage{
         
     }
 
-    async searchUser(){
+    async searchUser(statusSearch){
         await this.page.waitForLoadState('domcontentloaded');
 
         await expect(this.container).toBeVisible();
@@ -70,9 +73,10 @@ class AdminPage{
 
         await this.empName.fill(this.fillEmpName);
         await this.page.getByRole('listbox').getByText(this.fillEmpName, { exact: true }).first().click();
-
+        
+        //this.enable = 'Enabled';
         await this.statusDropdown.click();
-        await this.page.getByRole('listbox').getByText('Enabled', { exact: true }).click();
+        await this.page.getByRole('listbox').getByText(statusSearch, { exact: true }).click();
         await this.searchButton.click();
         //await this.page.pause();
     }
@@ -82,27 +86,46 @@ class AdminPage{
         await expect(myRow).toBeVisible();
 
         await myRow.locator(this.editIcon).click();
+        await this.page.waitForLoadState('domcontentloaded');
+        await expect(this.editTitle).toBeVisible();
         //await this.page.pause()
 
-        const statusCard = this.cardAll.filter({hasText: 'Status'});
-        const editStatusDropdown = statusCard.locator(this.editDropdown);
+        this.statusCard = this.cardAll.filter({hasText: 'Status'});
+        this.editStatusDropdown = this.statusCard.locator(this.editDropdown);
+       
+        await expect(this.cardAll.filter({ hasText: 'Status' })).toBeVisible({timeout: 10000});
+        await expect(this.editStatusDropdown).not.toHaveText('-- Select --', {timeout: 5000});
 
-        await expect(editStatusDropdown).not.toHaveText('-- Select --', {timeout: 5000});
-
-        const currentStatus = await editStatusDropdown.innerText();
-        console.log('Current status:', currentStatus);
-        await editStatusDropdown.click();
+        this.currentStatus = await this.editStatusDropdown.innerText();
+        console.log('Current status:', this.currentStatus);
+        await this.editStatusDropdown.click();
         // const currentStatus = await statusCard.nth(0).textContent();
         // console.log(currentStatus);
         
-
-        if ( currentStatus === 'Enabled'){
-            await this.page.getByText('Disabled',{exact: true}).click();
+        this.newState = '';
+        if ( this.currentStatus === 'Enabled'){
+            await this.page.getByRole('listbox').getByText('Disabled',{exact: true}).click();
+            this.newState = 'Disabled';
         }else{
-            await this.page.getByText('Enabled', {exact: true}).click();
+            await this.page.getByRole('listbox').getByText('Enabled', {exact: true}).click();
+            this.newState = 'Enabled';
         }
         
-        await this.page.saveButton().click();
+        await this.saveButton.click();
+        await expect(this.page.getByText('Successfully Updated', { exact: true })).toBeVisible();
+    }
+
+    async checkEditedInfo(){
+
+        const myRow = this.rowAll.filter({hasText: this.filledUsernameInput}).filter({hasText: this.fillEmpName});
+        await expect(myRow).toBeVisible();
+
+        //this.updatedStatus = await this.editStatusDropdown.innerText();
+        await expect(myRow).toContainText(this.newState);
+        //await expect(myRow).toContainText(this.newState);
+        console.log('Expected updated status:', this.newState);
+        //await expect(myRow.locator(this.updatedStatus));
+
     }
 }
 
