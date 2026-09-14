@@ -29,7 +29,8 @@ class LeaveApplyPage{
 
     async goToLeavePage(){
         await this.leaveButton.click();
-        await expect(this.leaveHeader).toBeVisible();
+        await this.page.waitForLoadState('domcontentloaded');
+        await expect(this.leaveHeader).toBeVisible({timeout: 10000});
     }
 
     async goToApplyPage(){
@@ -60,6 +61,7 @@ class LeaveApplyPage{
         await this.commentBox.fill(this.comment); 
         
         await this.applyButton.click();
+        await expect(this.page.getByText('Successfully Saved', { exact: true })).toBeVisible({ timeout: 15000 });
     }
 
     async verifyPendingLeave(firstdate, secondate){
@@ -71,11 +73,11 @@ class LeaveApplyPage{
         await this.toDate.fill(secondate);
 
         await this.searchButton.click();
-
+        await this.page.waitForLoadState('networkidle').catch(() => {});
         //await expect(toast).toHaveText(/Success/);
 
         this.rowComment = this.rowCard.filter({hasText: this.comment});
-        //await expect(this.rowComment).toBeVisible();
+        await expect(this.rowComment).toBeVisible({timeout: 15000});
         await expect(this.rowComment).toContainText(firstdate);
         await expect(this.rowComment).toContainText(secondate);
 
@@ -87,7 +89,7 @@ class LeaveApplyPage{
 
             const cancelled = this.rowComment.getByText('Cancelled');
             await expect(cancelled).toBeVisible();
-            await this.page.pause();
+            //await this.page.pause();
         }        
     }
 }

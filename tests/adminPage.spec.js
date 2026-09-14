@@ -17,7 +17,6 @@ test(`Verify user search working and update user status ${dataset.USERNAME}`, as
     const employeeName = `${empData.LAST_NAME}${empId}`;
     await employeePage.addEmployee(empData.FIRST_NAME,`${employeeName}`,empId);
     
-    
     const adminPage = poManager.getAdminPage();
     await adminPage.goToAdminPage();
     await adminPage.addUser(empData.FIRST_NAME,employeeName,empId);

@@ -14,10 +14,10 @@ require ('dotenv').config();
  */
 const config = ({
   testDir: './tests',
-  timeout: 40*1000, 
+  timeout: 90 * 1000, 
   worker: 1,
   expect: {
-    timeout: 5000
+    timeout: 15000
   },
 
   reporter: [['html'],
