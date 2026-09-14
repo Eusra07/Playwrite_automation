@@ -51,8 +51,8 @@ To debug a test write "npx playwrite test "spec.js file location" --debug
 
 ## Generate Test Reports
 * HTML Report:<br>
-###1. Run the specific test file or files.
-###2. HTML report command: npx playwrite show-report
+1. Run the specific test file or files.
+2. 2. HTML report command: npx playwrite show-report
 * Allure Report:<br>
 1. Install allure if not installed by using this command: pm i -D @playwright/test allure-playwright
 2. allure generate ./allure-results --clean
