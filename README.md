@@ -16,7 +16,7 @@ Following the POM pattern makes the project reusable, manageable, and easy to un
 Download and install Node.js from its official website or go to this link to download. https://nodejs.org/en/download <br>
 To check node version. Go to cmd and write node --version <br>
 To check npm version. write npm --version
-2. Install Playwright
+2. Install Playwright<br>
 write npm init playwright@latest 
 3. Install dotenv<br>
 npm install dotenv <br>
