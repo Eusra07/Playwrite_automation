@@ -1,0 +1,163 @@
+{
+  "info": {
+    "_postman_id": "062071c3-af1c-4264-8711-c38ab478cd30",
+    "name": "Ostad_Assignment",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40843604"
+  },
+  "item": [
+    {
+      "name": "Question1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function(){\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst users = pm.response.json();\r\n\r\npm.test(\"Response contains user data\", function(){\r\n    pm.expect(users.length).to.be.greaterThan(0);\r\n    //console.log(users.length);\r\n});\r\n\r\npm.test(\"Each user has an id, name, and email\", function(){\r\n    \r\n    for (let i = 0; i<users.length; i++){\r\n        pm.expect(users[i]).to.have.property('id');\r\n        pm.expect(users[i]).to.have.property('name');\r\n        pm.expect(users[i]).to.have.property('email');\r\n        //console.log('My id, name, and email is ',users[i].id, users[i].name, users[i].email);\r\n    };\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/users",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Question2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function(){\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst users = pm.response.json();\r\nconst userId = users[1].id;\r\n\r\npm.environment.set(\"userId\",userId);\r\npm.environment.set('Phone', users[1].phone);\r\n//console.log(userId);\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/users",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Question3",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function(){\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconsole.log(pm.environment.get('userId'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/users/{{userId}}",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "users",
+            "{{userId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Question4",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function(){\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst dataa = pm.response.json();\r\n\r\npm.test('Response returns the same id stored in variable and phone field is not empty',function(){\r\n\r\n    const envVarId = pm.environment.get('userId');\r\n    pm.expect(dataa.id).to.be.eql(envVarId);\r\n    pm.expect(dataa.phone).to.not.be.empty;\r\n\r\n});\r\n\r\n\r\n\r\n"
+            ]
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\nconst random = Math.floor(Math.random()*10000);\r\npm.environment.set('newName', 'testName'+random);\r\npm.environment.set('newEmail', 'test'+random+\"@gmail.com\");\r\npm.environment.set('newCompany', 'companyName'+random);\r\n\r\n\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"{{newName}}\",\r\n    \"email\": \"{{newEmail}}\",\r\n    \"phone\": \"{{Phone}}\",\r\n    \"company\": {\r\n        \"name\": \"{{newCompany}}\"\r\n    }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/users/{{userId}}",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "users",
+            "{{userId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

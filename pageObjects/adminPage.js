@@ -16,6 +16,8 @@ class AdminPage{
         this.confirmPasswordInput = this.page.locator('.user-password-row input[type="password"]').nth(1);
         this.saveButton = this.page.getByRole('button', { name: 'Save' });
 
+        
+        this.formLoader = this.page.locator('.oxd-form-loader');
         this.container = this.page.locator('div.orangehrm-background-container');
         this.userRole = this.page.locator('div.oxd-select-text.oxd-select-text--active').locator('div').nth(0);
         this.searchButton = this.page.getByRole('button', { name: 'Search' });
@@ -26,10 +28,10 @@ class AdminPage{
         this.cardAll = this.page.locator('div.oxd-input-group.oxd-input-field-bottom-space:visible');
         this.editDropdown = this.page.locator('.oxd-select-text-input'); //both dropdown
 
-
     }
 
     async goToAdminPage(){
+        await expect(this.adminButton).toBeVisible({ timeout: 15000 });
         await this.adminButton.click();
         await this.page.waitForURL('https://opensource-demo.orangehrmlive.com/web/index.php/admin/viewSystemUsers');
         //await this.page.waitForLoadState('domcontentloaded');
@@ -63,21 +65,27 @@ class AdminPage{
         await this.page.waitForLoadState('domcontentloaded');
 
         await expect(this.container).toBeVisible();
+        await expect(this.formLoader).toBeHidden({ timeout: 20000 });
         await expect(this.userNameInput).toBeVisible();
         
-        await this.userNameInput.click();
+        //await this.userNameInput.click();
         await this.userNameInput.fill(this.filledUsernameInput);
 
         await this.userDropdown.click();
         await this.page.getByRole('listbox').getByText('ESS', { exact: true }).click();
 
         await this.empName.fill(this.fillEmpName);
-        await this.page.getByRole('listbox').getByText(this.fillEmpName, { exact: true }).first().click();
+        const empoyeeOption = this.page.getByRole('listbox').getByText(this.fillEmpName, { exact: true }).first();
+        await expect(empoyeeOption).toBeVisible({timeout: 20000})
+        await empoyeeOption.click();
         
         //this.enable = 'Enabled';
         await this.statusDropdown.click();
         await this.page.getByRole('listbox').getByText(statusSearch, { exact: true }).click();
         await this.searchButton.click();
+
+        await expect(this.formLoader).toBeHidden({timeout: 20000});
+        await this.page.waitForLoadState('networkidle').catch(() => {});
         //await this.page.pause();
     }
 
@@ -87,7 +95,7 @@ class AdminPage{
 
         await myRow.locator(this.editIcon).click();
         await this.page.waitForLoadState('domcontentloaded');
-        await expect(this.editTitle).toBeVisible();
+        await expect(this.editTitle).toBeVisible({ timeout: 15000 });
         //await this.page.pause()
 
         this.statusCard = this.cardAll.filter({hasText: 'Status'});
@@ -118,7 +126,7 @@ class AdminPage{
     async checkEditedInfo(){
 
         const myRow = this.rowAll.filter({hasText: this.filledUsernameInput}).filter({hasText: this.fillEmpName});
-        await expect(myRow).toBeVisible();
+        await expect(myRow).toBeVisible({timeout: 15000});
 
         //this.updatedStatus = await this.editStatusDropdown.innerText();
         await expect(myRow).toContainText(this.newState);

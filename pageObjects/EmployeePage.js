@@ -14,17 +14,20 @@ class EmployeePage{
         this.employeeId = this.page.locator('div.oxd-input-group').filter({ hasText: 'Employee Id' }).locator('input');
         this.saveButton = this.page.getByRole('button', { name: 'Save' });
 
+        this.personalDetailHeader = this.page.getByRole('heading', { name: 'Personal Details' });
         this.employeeList = this.page.locator('a').filter({ hasText: 'Employee List' });
         this.empname = this.page.locator('.oxd-input-group').filter({hasText: 'Employee Name'}).getByRole('textbox');
         this.empid = this.page.locator('.oxd-input-group').filter({ hasText: 'Employee Id' }).getByRole('textbox');
         this.searchButton = this.page.getByRole('button', { name: 'Search' });
+
 
         
     }
 
     async goToEmployeePage(){
         await this.pim.click();
-        await expect(this.pimHead).toBeVisible();
+        await this.page.waitForLoadState('domcontentloaded');
+        await expect(this.pimHead).toBeVisible({timeout:10000});
     }
 
     async addEmployee(firstname, lastname, employeeid){
@@ -36,6 +39,7 @@ class EmployeePage{
         await this.employeeId.fill(employeeid);
         await this.saveButton.click();
         await expect(this.page.getByText('Successfully Saved', { exact: true })).toBeVisible();
+        await expect(this.personalDetailHeader).toBeVisible();
 
         //await expect(this.page.locator('.oxd-toast-content-text').toHaveText('Successfully Saved'));
         //await this.page.pause();
