@@ -12,16 +12,16 @@ Following the POM pattern makes the project reusable, manageable, and easy to un
 * Allure
 
 ## Installation
-1. Instal Node.js<br>
+1. Install Node.js<br>
 Download and install Node.js from its official website or go to this link to download. https://nodejs.org/en/download <br>
 To check node version. Go to cmd and write node --version <br>
 To check npm version. write npm --version
-2. Install Playwright<br>
+3. Install Playwright<br>
 write npm init playwright@latest 
-3. Install dotenv<br>
+4. Install dotenv<br>
 npm install dotenv <br>
 Then create .env file in the project root directory and add BASE_URL.
-4. Install Allure reporter: npm install -D allure-playwright
+5. Install Allure reporter: npm install -D allure-playwright
   
 ## Steps
 * Clone git repository
